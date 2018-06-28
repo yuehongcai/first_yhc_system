@@ -1,0 +1,98 @@
+{% load staticfiles %}
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="devops" content="index,follow">
+    <meta name="Author" content="devops">
+    <link href="{% static 'img/favicon.ico' %}" rel="shortcut icon">
+    <link href="{% static 'css/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/alert/sweet-alert.css' %}" rel="stylesheet">
+
+        <script type="text/javascript" src="/static/js/alert/sweet-alert.min.js"></script>
+        <script type="text/javascript" src="/static/js/jquery/jquery-3.2.1.min.js"></script>
+
+    <style type="text/css">
+        body {  /*设置背景*/
+            background: url('/static/img/girl.jpg');
+            background-size: 100%;
+            background-repeat: no-repeat;
+        }
+        .form-signin {  /*设置登录框*/
+            width: 480px;
+            height: 400px;
+            padding: 13px;
+            background-color: rgba(240,255,255,0.5);
+            position: fixed;
+            margin-top: 200px;
+            margin-left:720px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .form-group{  /*设置登录框中的文本填入框*/
+            font-size: 16px;
+            font-family: '宋体';
+            width: 400px;
+            height: 60px;
+            background-color: cyan;
+            text-align: center;
+            line-height: 25px;
+            border-radius: 10px;
+            margin: 20px 20px;;
+        }
+
+        .btn { /*设置登录和忘记密码的按钮*/
+            font-size: medium;
+            font-weight: bolder;
+            border-radius: 10px;
+        }
+
+    </style>
+
+    <title>Devops运维管理平台</title>
+    </head>
+
+    <body>
+        <!--login box-->
+    <div class="container">
+        <div class="col-md-12">
+            <form class="form-signin" id="loginform" action="/login/" method="POST">
+                <h2 class="form-signin-heading" style="text-align: center;font-size: 40px">Devops运管平台</h2>
+
+                {% csrf_token %}
+                    <div class="form-group">
+                        {{ userform.username.label_tag }}
+                        {{ userform.username }}
+
+                    </div>
+
+                    <div class="form-group " >
+                        {{ userform.password.label_tag }}
+                        {{ userform.password }}
+                    </div>
+
+                    {% if message %}
+                        <div class="alert alert-warning">{{ message }}</div>
+                    {% endif %}
+
+                    <button type="button" id='forget' class="btn btn-danger pull-left">忘记密码</button>
+                    <button type="submit" class="btn btn-success pull-right">登陆</button>
+
+            </form>
+         </div>
+      </div>
+
+
+<script type="text/javascript">
+    /* 忘记密码提示*/
+    $("#forget").click(function() {
+        str="请联系管理员帮您重置密码"+'\n'+"网址：www.cnblogs.com/yue-hong";
+        swal(str)
+    });
+
+</script>
+
+</body>
+</html>

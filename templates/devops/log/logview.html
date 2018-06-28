@@ -1,0 +1,100 @@
+{% extends '../base.html' %}
+{% load staticfiles %}
+
+{% block css %}
+    <style type="text/css">
+        #log{
+            width:900px;
+            height:600px;
+            overflow:auto;
+            border:2px solid #000000;
+            background-color:#000000;
+            color:green;
+            margin: auto;
+            font-size: 20px;
+    }
+    </style>
+
+{% endblock css %}
+
+{% block content %}
+<div class="user_list">
+    <!--告警设置定义-->
+    <div class="user_list_ls">
+        <div class="panel panel-default" >
+            <div class="panel-heading" style="text-align: center;font-weight: 600;color:hotpink;font-size: 20px;">
+                远端主机日志查看
+            </div>
+
+            <div class="panel-body form-group col-sm-10 col-sm-offset-1" style="background-color:powderblue;margin-top:10px ">
+                <form action="/devops/log/view" method="post">
+                    <div class="form-group " style="margin: auto">  <!--控制文本框左右距离-->
+                        <div class="col-lg-3">
+                            <p style="font-size: 20px;text-align: center;color: blue">
+                                主机列表：{{ logview_form.remote_host_lst }}</p>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <p style="font-size: 20px;text-align: center;color: blue">
+                                日志种类：{{ logview_form.log_service }}</p>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <p style="font-size: 20px;text-align: center;color: blue">
+                                倒数行数：{{ logview_form.line_count }}</p>
+                        </div>
+
+                        <div class="col-lg-3" style="margin-top: 28px;">
+                            <button  class="btn btn-warning btn-sm" >执行脚本</button>
+                            <button  class="btn btn-success btn-sm" type="button" id="search_btn">查询结果</button>
+                        </div>
+                    </div>
+                    {% if message %}
+                        <div class="alert alert-warning">{{ message }}</div>
+                    {% endif %}
+                </form>
+
+            </div>  <!--panel-body结束-->
+        </div>  <!--panel全部结束-->
+    </div>  <!--user_list_ls结束-->
+    <div id="log" style="margin-top: -500px"></div>
+</div>  <!--总内容边框结束-->
+
+{% endblock content %}
+
+{% block script %}
+    <script type="text/javascript">
+        $(function(){
+            $('#search_btn').click(function(){
+                var id = 0;
+                var st = setInterval(function () {
+                    id++;  //传递到django的redis的键
+                    $.ajax({
+                        async: false,
+                        url: "/devops/log/search/",
+                        type: "post",
+                        data:{"id":id},
+                        success(res){
+                            if(res == '.'){
+                                $('#log').append(res);  //如果返回的是点，即没有日志，那么打印点不换行
+                            }
+                            else{
+                                $('#log').append("<p>" + res + "</p>"); //如果是日志，直接打印行日志
+                            }
+                        },
+                        error(res) {
+                            swal({
+                                title: "error",
+                                text: res,
+                                type: "error",
+                                confirmButtonText: "确定"
+                            })
+                        }
+                    });
+                },100);
+            });
+
+        })
+
+    </script>
+{% endblock script %}

@@ -1,0 +1,171 @@
+{% extends '../base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+    <h1>
+      仪表盘
+      <small>dashboard（%）</small>
+    </h1>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-2 text-center">
+                      <input type="text" class="knob" value="50" data-width="90"
+                             data-height="90" data-fgColor="#00a65a" data-readonly="true">
+                      <div class="knob-label">在线</div>
+                    </div>
+
+                    <div class="col-md-2 text-center">
+                      <input type="text" class="knob" value="60" data-width="90"
+                             data-height="90" data-fgColor="#f56954" data-readonly="true">
+                      <div class="knob-label">下线</div>
+                    </div>
+
+                    <div class="col-md-2 text-center">
+                      <input type="text" class="knob" value="70" data-width="90"
+                             data-height="90" data-fgColor="#932ab6" data-readonly="true">
+                      <div class="knob-label">故障</div>
+                    </div>
+
+                    <div class=" col-md-2 text-center">
+                      <input type="text" class="knob" value="80" data-width="90"
+                             data-height="90" data-fgColor="#3c8dbc" data-readonly="true">
+                      <div class="knob-label">备用</div>
+                    </div>
+                </div>  <!--row-->
+            </div> <!--box-body-->
+        </div> <!--col-md-12-->
+
+    </div> <!--row-->
+
+
+    <!--CPU和内存利用率的仪表盘，很奇怪的是div和script必须写在一起才会出现图片-->
+    <div class="row" style="margin-top: -100px">
+        <div class="col-md-4 col-lg-offset-1">
+            <div id="main01" style="width: 600px;height:400px;"></div>
+            <script type="text/javascript">
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts.init(document.getElementById('main01'));
+                // 指定图表的配置项和数据
+                var option = {
+                //title: {
+                  //  text: '业务指标' //标题文本内容
+                //},
+                toolbox: { //可视化的工具箱
+                    show: false,
+                    feature: {
+                        restore: { //重置
+                            show: true
+                        },
+                        saveAsImage: {//保存图片
+                            show: true
+                        }
+                    }
+                },
+                tooltip: { //弹窗组件
+                    formatter: "{a} <br/>{b} : {c}%"
+                },
+                series: [{
+                    name: 'CPU利用率',
+                    type: 'gauge',
+                    detail: {formatter:'{value}%'},
+                    data: [{value: 45, name: 'CPU利用率'}]
+                }]
+
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+            </script>
+        </div>
+
+        <div class="col-md-4 ">
+            <div id="main02" style="width: 600px;height:400px;"></div>
+            <script type="text/javascript">
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts.init(document.getElementById('main02'));
+                // 指定图表的配置项和数据
+                var option = {
+                //title: {
+                  //  text: '业务指标' //标题文本内容
+                //},
+                toolbox: { //可视化的工具箱
+                    show: false,
+                    feature: {
+                        restore: { //重置
+                            show: true
+                        },
+                        saveAsImage: {//保存图片
+                            show: true
+                        }
+                    }
+                },
+                tooltip: { //弹窗组件
+                    formatter: "{a} <br/>{b} : {c}%"
+                },
+                series: [{
+                    name: '内存利用率',
+                    type: 'gauge',
+                    detail: {formatter:'{value}%'},
+                    data: [{value: 80, name: '内存利用率'}]
+                }]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+            </script>
+        </div>
+    </div>
+
+{% endblock content%}
+
+
+{% block script %}
+    <script src="/static/js/echarts/knob.js"></script>
+    <script src="/static/js/echarts/echarts.js"></script>
+    <script type="text/javascript">
+    // 下列是负责完成圆形图的状态统计比例，代码直接抄，至于具体的值，通过views.py渲染给div的value
+        $(function(){
+            $(".knob").knob({
+                draw: function () {
+                    if (this.$.data('skin') == 'tron') {
+                      var a = this.angle(this.cv)  // Angle
+                          , sa = this.startAngle          // Previous start angle
+                          , sat = this.startAngle         // Start angle
+                          , ea                            // Previous end angle
+                          , eat = sat + a                 // End angle
+                          , r = true;
+                      this.g.lineWidth = this.lineWidth;
+                      this.o.cursor
+                      && (sat = eat - 0.3)
+                      && (eat = eat + 0.3);
+                      if (this.o.displayPrevious) {
+                        ea = this.startAngle + this.angle(this.value);
+                        this.o.cursor
+                        && (sa = ea - 0.3)
+                        && (ea = ea + 0.3);
+                        this.g.beginPath();
+                        this.g.strokeStyle = this.previousColor;
+                        this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sa, ea, false);
+                        this.g.stroke();
+                      }
+
+                      this.g.beginPath();
+                      this.g.strokeStyle = r ? this.o.fgColor : this.fgColor;
+                      this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sat, eat, false);
+                      this.g.stroke();
+
+                      this.g.lineWidth = 2;
+                      this.g.beginPath();
+                      this.g.strokeStyle = this.o.fgColor;
+                      this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
+                      this.g.stroke();
+                      return false;
+                    }
+                }
+            });     /* END JQUERY KNOB */
+        });
+    </script>
+
+{% endblock script %}

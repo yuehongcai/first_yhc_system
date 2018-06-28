@@ -1,0 +1,73 @@
+{% extends '../base.html' %}
+{% load staticfiles %}
+{% block css %}
+    <link href="/static/css/bootstrap/css/bootstrap-table.css" rel="stylesheet">
+    <style type="text/css">
+        .user_list{
+            width: 100%;
+            border-radius: 6px;
+        }
+        .user_list_ls td{
+            white-space: nowrap;
+            padding-right:10px;
+            margin-left: 20px;
+            margin-right: 20px;
+            font-weight: normal;
+        }
+        .form-group{  /*设置登录框中的文本填入框*/
+            font-size: 16px;
+            font-family: '宋体';
+            color: #0FB9EF;
+            text-align: center;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .btn {
+            font-size: medium;
+            font-weight: bolder;
+            border-radius: 10px;
+        }
+
+    </style>
+
+{% endblock css %}
+
+{% block content %}
+
+<div class="user_list">
+    <div class="user_list_ls">
+        <div class="panel panel-default" >
+            <div class="panel-heading" style="text-align: center;font-weight: 600;color:hotpink;font-size: 20px;">
+                Ansible自动部署远端报告服务进程
+            </div>
+
+            <div class="panel-body form-group">
+　　　　　<form>
+            <div class="form-group col-sm-4">
+                {{ cmdbserveradd_form.add_ip.label }}
+                {{ cmdbserveradd_form.add_ip }}
+            </div>
+
+            <div class="form-group col-sm-4">
+                {{ cmdbserveradd_form.add_username.label }}
+                {{ cmdbserveradd_form.add_username}}
+            </div>
+
+            <div class="form-group col-sm-4">
+                {{ cmdbserveradd_form.add_password.label }}
+                {{ cmdbserveradd_form.add_password }}
+            </div>
+
+            <div class="form-group col-md-4 col-md-offset-4" >
+                <button type="submit" name="submit" class="btn btn-success">部署</button>
+            </div>
+        </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}

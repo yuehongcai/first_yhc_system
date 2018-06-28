@@ -1,0 +1,16 @@
+#[root@k8s-minion ~]# cat /etc/systemd/system/cmdb-agent.service #/opt/clients是客户端指定的目录
+# 随后ansible需要systemctl start cmdb-agent.service && systemctl enable cmdb-agent.service
+
+[Unit]
+Description = cmdb agent daemon
+After = rc.local.service
+
+[Service]
+Type = simple
+User = root
+Group = root
+ExecStart = /usr/bin/python /opt/cmdb-clients/bin/main.py report_data
+StartLimitInterval = 30min
+
+[Install]
+WantedBy = multi-user.target

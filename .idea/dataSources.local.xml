@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="MySQL - cmdb@192.168.10.162" uuid="400e546c-a211-44c4-a50d-26394723e0b8">
+      <secret-storage>master_key</secret-storage>
+      <user-name>django</user-name>
+      <schema-pattern>cmdb.*</schema-pattern>
+      <default-schemas>cmdb.*</default-schemas>
+    </data-source>
+  </component>
+</project>

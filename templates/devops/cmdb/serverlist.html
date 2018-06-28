@@ -1,0 +1,126 @@
+{% extends '../base.html' %}
+{% load staticfiles %}
+{% block css %}
+    <style type="text/css">
+        .user_list{
+            width: 100%;
+            border-radius: 6px;
+        }
+        .user_list_ls td{
+             /*white-space: nowrap;*/
+            padding-right:10px;
+            margin-left: 20px;
+            margin-right: 20px;
+            font-weight: normal;
+        }
+        .table td {
+            text-align: center;
+            height:20px;
+            font-weight: 600;
+            font-family: '宋体';
+            color: hotpink;
+            font-size: 17px;
+            border: 1px solid lightblue;
+        }
+        .table th,.table tr {
+            color: #00ffff;
+            background-color: white;
+            text-align: center;
+        }
+    </style>
+{% endblock css %}
+
+
+{% block content %}
+
+<div class="user_list">
+    <div class="user_list_ls">
+        <div class="panel panel-default" >
+            <div class="panel-heading" style="text-align: center;font-weight: 600;color:hotpink;font-size: 20px;">
+                告警通知信息栏
+            </div>
+        </div>
+
+        <div class="panel-body form-group" style="margin-bottom: 0">
+            <table id="test_table" class="table" cellspacing="1px" cellpadding="0px">
+                <thead>
+                    <tr>
+                        <th>IP地址</th>
+                        <th>主机名</th>
+                        <th>品牌</th>
+                        <th>型号</th>
+                        <th>CPU总核数</th>
+                        <th>系统总内存(GB)</th>
+                        <th>本地磁盘总和(GB)</th>
+                        <th>操作系统</th>
+                        <th>资产类型</th>
+                        <th>录入方式</th>
+                        <th>更新时间</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for server_li in data %}
+                    <tr>
+                        <td class="text-green text-bold">{{ server_li.ip }}</td>
+                        <td>{{ server_li.hostname }}</td>
+                        <td>{{ server_li.manufacturer }}</td>
+                        <td>{{ server_li.product_model }}</td>
+                        <td>{{ server_li.cpu_all_core }}</td>
+                        <td>{{ server_li.mem_size }}</td>
+                        <td>{{ server_li.disk_size }}</td>
+                        <td>{{ server_li.os_release }}</td>
+                         <td>
+                            {% if server_li.asset_type == 'server' %}
+                                <input type="button" name="" class="btn btn-success btn-xs" value="物理机">
+                            {% elif server_li.asset_type == 'virtual' %}
+                                <input type="button" name="" class="btn btn-warning btn-xs" value="虚拟机">
+                            {% else %}
+                                <input type="button" name="" class="btn btn-danger btn-xs" value="其他">
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if server_li.created_by == 'auto' %}
+                                <input type="button" name="" class="btn btn-info btn-xs" value="自动">
+                            {% else %}
+                                <input type="button" name="" class="btn btn-primary btn-xs" value="手动">
+                            {% endif %}
+                        </td>
+                        <td>{{ server_li.update_time }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <nav aria-label="Page navigation"> <!--页面切换-->
+                <ul class="pagination">
+                    {% if data.has_previous %}
+                        <li>
+                            <a href="?page={{ data.previous_page_number }}" aria-label="上一页">
+                            <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% for pg in data.paginator.page_range %}
+                        {% if data.number == pg %}
+                            <li class="active"><a href=?page={{ pg }}>{{ pg }}</a></li>
+                        {% else %}
+                            <li><a href=?page={{ pg }}>{{ pg }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if data.has_next %}
+                        <li>
+                            <a href="?page={{ data.next_page_number }}" aria-label="下一页">
+                            <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

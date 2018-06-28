@@ -1,0 +1,16 @@
+---
+- hosts: temp
+  tasks:
+    - name: ===========tar file ========
+      unarchive: src=../../cmdb-clients.tar.gz dest=/opt/
+    - name: =========copy systemd service =====
+      copy: src=cmdb-agent.service dest=/etc/systemd/system/
+      notify:
+      - restart cmdb-agent
+	- name: ============systemctl daemon-reload===========
+      shell: systemctl daemon-reload
+    - name: =====start service and enable service================
+      service: name=cmdb-agent state=restarted  enabled=true
+  handlers:
+    - name: restart cmdb-agent
+      service: name=cmdb-agent state=restarted

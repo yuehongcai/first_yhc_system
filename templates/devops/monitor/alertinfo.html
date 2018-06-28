@@ -1,0 +1,121 @@
+{% extends '../base.html' %}
+{% load staticfiles %}
+{% block css %}
+    <link href="/static/css/alert/sweetalert.css" rel="stylesheet">
+    <style type="text/css">
+        .user_list{
+            width: 100%;
+            border-radius: 6px;
+        }
+        .user_list_ls td{
+            white-space: nowrap;
+            padding-right:10px;
+            margin-left: 20px;
+            margin-right: 20px;
+            font-weight: normal;
+        }
+        .table td {
+            text-align: center;
+            height:20px;
+            font-weight: 600;
+            font-family: '宋体';
+            color: hotpink;
+            font-size: 17px;
+            border: solid 1px lightblue;
+        }
+        .table th,.table tr {
+            color: #00ffff;
+            background-color: white;
+            text-align: center;
+        }
+
+        }
+    </style>
+{% endblock css %}
+
+{% block script %}
+    <script src="/static/js/alert/sweetalert-dev.js"></script>
+{% endblock script %}
+
+{% block content %}
+
+<div class="user_list">
+    <div class="user_list_ls">
+        <div class="panel panel-default" >
+            <div class="panel-heading" style="text-align: center;font-weight: 600;color:hotpink;font-size: 20px;">
+                告警通知信息栏
+            </div>
+        </div>
+
+        <div class="panel-body form-group" style="margin-bottom: 0">
+            <table id="test_table" class="table" cellspacing="1px" cellpadding="0px">
+                <thead>
+                    <tr>
+                        <th>主机</th>
+                        <th>监控项</th>
+                        <th>监控值</th>
+                        <th>告警级别</th>
+                        <th>时间</th>
+                        <th>是否确认</th>
+                        <th>备注</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for server_li in data %}
+                    <tr>
+                        <td class="text-green text-bold">{{ server_li.host }}</td>
+                        <td>{{ server_li.item }}</td>
+                        <td>{{ server_li.value }}</td>
+                        <td>
+                            {% if server_li.level == 3 %}
+                                <input type="button" name="" class="btn btn-danger btn-xs" value="紧急">
+                            {% elif server_li.level == 2 %}
+                                <input type="button" name="" class="btn btn-warning btn-xs" value="严重">
+                            {% endif %}
+                        </td>
+                        <td>{{ server_li.time }}</td>
+                        <td>
+                            {% if server_li.ack == 0 %}
+                                <input type="button" name="" class="btn btn-info btn-xs" value="未确认">
+                            {% elif server_li.ack == 1 %}
+                                <input type="button" name="" class="btn btn-success btn-xs" value="已确认">
+                            {% endif %}
+                        </td>
+                        <td>{{ server_li.info }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <nav aria-label="Page navigation"> <!--页面切换-->
+                <ul class="pagination">
+                    {% if data.has_previous %}
+                        <li>
+                            <a href="?page={{ data.previous_page_number }}" aria-label="上一页">
+                            <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% for pg in data.paginator.page_range %}
+                        {% if data.number == pg %}
+                            <li class="active"><a href=?page={{ pg }}>{{ pg }}</a></li>
+                        {% else %}
+                            <li><a href=?page={{ pg }}>{{ pg }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if data.has_next %}
+                        <li>
+                            <a href="?page={{ data.next_page_number }}" aria-label="下一页">
+                            <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

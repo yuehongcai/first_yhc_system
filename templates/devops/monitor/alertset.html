@@ -1,0 +1,163 @@
+{% extends '../base.html' %}
+{% load staticfiles %}
+{% block css %}
+    <link href="/static/css/alert/checkbox.css" rel="stylesheet"> <!--复选框操作-->
+    <link href="/static/css/alert/sweetalert.css" rel="stylesheet">
+    <style type="text/css">
+        .user_list{
+            width: 100%;
+            border-radius: 6px;
+        }
+        .user_list_ls td{
+            white-space: nowrap;
+            padding-right:10px;
+            margin-left: 20px;
+            margin-right: 20px;
+            font-weight: normal;
+        }
+        .form-group{  /*设置登录框中的文本填入框*/
+            font-size: 16px;
+            font-family: '宋体';
+            color: #0FB9EF;
+            text-align: center;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .btn {
+            font-size: medium;
+            font-weight: bolder;
+            border-radius: 10px;
+        }
+        .sweetalert {
+            width: 22em;
+            margin: 0 auto;
+            left: 0;
+            right: 0;
+        }
+    </style>
+{% endblock css %}
+
+
+{% block content %}
+<div class="user_list">
+    <!--告警设置定义-->
+    <div class="user_list_ls">
+        <div class="panel panel-default" >
+            <div class="panel-heading" style="text-align: center;font-weight: 600;color:hotpink;font-size: 20px;">
+                告警方式
+            </div>
+
+            <div class="panel-body form-group col-sm-10 col-sm-offset-1" style="background-color:powderblue;margin-top:10px ">
+                <form  id="alertform">
+                    <div class="panel-heading col-sm-6" style="font-weight: 600;color:black;font-size: 20px;">
+                        邮件告警
+                        <div class="form-group " style="margin: auto 70px">  <!--控制文本框左右距离-->
+                                <br>
+                            {{ monitor_alert_form.email_sender }}
+                                <br>
+                            {{ monitor_alert_form.email_sender_password }}
+                                <br>
+                            {{ monitor_alert_form.email_receiver }}
+                                <br>
+                            {{ monitor_alert_form.email_smtp_server }}
+                        </div>
+                    </div>
+
+                     <div class="panel-heading col-sm-6 " style="font-weight: 600;color:black;font-size: 20px;">
+                        钉钉告警
+                         <a href="/media/download/钉钉告警使用文档.docx" download="钉钉帮助指南.docx" class="pull-right">
+                             <i class="icon-question-sign"><small>帮助</small></i>
+                         </a>
+                         <div class="form-group " style="margin: auto 70px" >
+                             <br>
+                            {{ monitor_alert_form.dingding_url }}
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-4 col-md-offset-4" >
+                        <div class="checkbox checkbox-success">
+                            <input name="email_alert" type="checkbox">
+                            <label for="checkbox01" style="color:black;text-align: center">
+                                内网环境推荐邮件告警
+                            </label>
+                        </div>
+
+                        <div class="checkbox checkbox-warning">
+                            <input name="dingding_alert" type="checkbox">
+                            <label for="checkbox02" style="color: black;text-align: center" >
+                                联网环境推荐钉钉告警
+                            </label>
+                        </div>
+                        <button type="submit" name="submit" class="btn btn-success">启用</button>
+                        <button id="testbtn" class="btn btn-warning">测试</button>
+                    </div>
+                </form>
+            </div>  <!--panel-body结束-->
+        </div>  <!--panel全部结束-->
+    </div>  <!--user_list_ls结束-->
+
+    <!--阈值定义栏-->
+    <div class="user_list_ls" style="margin-top: -20px;">
+        <div class="panel panel-default" >
+            <div class="panel-heading" style="text-align: center;font-weight: 600;color:hotpink;font-size: 20px;">
+                定义阈值
+            </div>
+
+            <div class="panel-body form-group col-sm-4 col-md-offset-4" style="background-color:#00ffff;margin-top: 5px;">
+                    {{ monitor_alert_form.alert_item.label }}
+                    {{ monitor_alert_form.alert_item }}
+
+                    {{ monitor_alert_form.alert_level.label }}
+                    {{ monitor_alert_form.alert_level }}
+
+                    {{ monitor_alert_form.threhold.label }}
+                    {{ monitor_alert_form.threhold }}
+            </div>
+             <div class="form-group col-md-4 col-md-offset-4" >
+                <button type="submit" name="save" class="btn btn-warning">保存</button>
+            </div>
+        </div>
+    </div>
+
+</div>  <!--总内容边框结束-->
+
+
+{% endblock content %}
+
+{% block script %}
+    <script src="/static/js/alert/sweetalert-dev.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('#alertform').on('submit', function () {
+                $.ajax({
+                    type: 'POST', data: $(this).serialize(), url: '/devops/monitor/alert',
+                    success: function () {
+                        swal({
+                            title: "success",
+                            text: "启用告警成功",
+                            type: "success",
+                            confirmButtonText: "确定",
+                            customClass: "sweetalert"
+                        })
+                    },
+                    error: function () {
+                        swal({
+                            title: "error",
+                            text: "启用告警失败",
+                            type: "error",
+                            confirmButtonText: "确定"
+                        })
+                    }
+                });
+                return false;
+            });
+
+          $('#testbtn').click(function(){
+              str = "测试工作";
+              swal(str)
+          })
+        });
+
+
+    </script>
+{% endblock script %}

@@ -1,0 +1,281 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Devops运维管理平台</title>
+    <link href="/static/img/favicon.ico" type="image/x-icon" rel="shortcut icon">
+
+    <!--第三方插件样式-->
+    <link href="/static/css/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">  <!--显示搜索按钮图标-->
+    <link href="/static/css/font/css/font-awesome.min.css" rel="stylesheet">  <!--显示搜索按钮图标-->
+    <link href="/static/css/AdminLTE.min.css" rel="stylesheet">  <!--影响导航栏菜单的美观-->
+    <link href="/static/css/bootstrap/css/bootstrap-table.css" rel="stylesheet">
+
+    <link href="/static/css/ace/ace.min.css" rel="stylesheet">
+    <link href="/static/css/_all-skins.min.css" rel="stylesheet">
+
+    <!--自定义样式文件 ＊重要＊-->
+    <style type="text/css">
+        .round_icon{  /*显示圆形头像*/
+            width: 60%;
+            height: 60%;
+            border-radius: 100%;
+        }
+
+        .menu-text {  /*设置一级菜单的文字大小*/
+            font-size: 16px;
+            font-weight:600;
+        }
+
+        .treeview-menu li a {  /*设置二级菜单的文字居中*/
+            text-align: center;
+            font-size: 16px;
+            color: deeppink;
+        }
+
+        .navbar-static-top {   /*设置顶部距离，前提取消skins_all.css*/
+            padding: 19px;
+            background-color:#5c2699; /*紫色顶部背景色*/
+        }
+
+        .main-sidebar{
+            background-color:#002a80; /*调整左侧导航栏背景色，前提取消skins_all.css */
+        }
+
+    </style>
+
+    {% block css %}{% endblock css %} <!--继承子模板会重写-->
+
+    <script type="text/javascript" src="/static/js/jquery/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/adminlte.min.js"></script>  <!--能点动一级菜单-->
+
+    <script type="text/javascript">
+        $(function(){
+            $('.treeview-menu li a').click(function(){
+               $(this).css({color:'red'})
+            });
+        });
+    </script>
+
+    {% block script %}{% endblock script %}
+
+<body class="hold-transition skin-green sidebar-mini" >
+
+<div class="wrapper">
+    <header class="main-header">
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+           <a class="navbar-brand" href="/index/" style="font-family: 'Courier New' ">运管平台</a>
+            <ul class="nav navbar-nav">
+                <form class="navbar-form pull-right" >
+                    <input type="text" class="form-control" placeholder="搜索">
+                    <button type="submit" name="search" id="search-btn" class="btn btn-flat">
+                      <span><i class="fa fa-search"></i></span>
+                    </button>
+                </form>
+            </ul>
+
+            <div class="navbar-header pull-right" role="navigation">
+                <ul class="nav ace-nav">
+                    <!--第一条消息开始-->
+                    <li class="dropdown messages-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-envelope-o"></i>
+                            <span class="badge badge-danger">4</span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li class="header">You have 4 messages</li>
+                        </ul>
+                    </li>
+
+                    <!--第二条消息开始-->
+                    <li class="dropdown notifications-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bell-o"></i>
+                            <span class="badge badge-important">8</span>
+                        </a>
+
+                         <ul class="dropdown-menu">
+                            <li class="header"><a href="/devops/monitor/info">新的告警</a></li>
+                        </ul>
+                    </li>
+
+                    <li ><a href='/devops/logout'>
+                        <i class="fa fa-mail-forward fa-fw" ></i><span>退出登录</span></a>
+                    </li>
+                </ul><!-- /.ace-nav -->
+            </div><!-- /.navbar-header -->
+        </nav>
+    </header>
+
+    <!--左侧导航栏开始-->
+    <aside class="main-sidebar">
+        <div class="user-panel"  style="margin-top: -50px;margin-bottom: 5px">
+            <div class="pull-left ">
+              <img src="/static/img/logo.jpg" class="round_icon">
+                <span>
+                    <small style="font-size: medium;font-weight: 600;color: hotpink">admin</small>
+                </span>
+            </div>
+
+        </div>
+
+        <ul class="sidebar-menu" data-widget="tree">
+            <!--用户管理-->
+            <li class="active treeview ">
+                <a href="#" class="dropdown-toggle">
+                    <i class="icon-desktop" ></i>
+                    <span class="menu-text"> 用户管理 </span>
+                    <b class="arrow icon-angle-down"></b>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="/user/person">
+                            <i class="icon-double-angle-right"></i>个人中心
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/user/list">
+                            <i class="icon-double-angle-right "></i>用户列表
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/user/power">
+                            <i class="icon-double-angle-right"></i>权限列表
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+          <!--页面监控-->
+            <li class="active treeview">
+                <a href="#" class="dropdown-toggle" >
+                    <i class="icon-home"></i>
+                    <span class="menu-text"> 监控平台 </span>
+                    <b class="arrow icon-angle-down"></b>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="/devops/monitor/dashboard">
+                            <i class="icon-double-angle-right"></i>仪表图示
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/devops/monitor/display">
+                            <i class="icon-double-angle-right"></i>主机状态
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/devops/monitor/alert">
+                            <i class="icon-double-angle-right"></i>告警设置
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/devops/monitor/addnode">
+                            <i class="icon-double-angle-right"></i>添加节点
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/devops/monitor/maitain">
+                            <i class="icon-double-angle-right"></i>维护模式
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+              <!--资产平台-->
+            <li class="active treeview ">
+                <a href="#" class="dropdown-toggle">
+                    <i class="icon-edit"></i>
+                    <span class="menu-text"> 资产平台 </span>
+                    <b class="arrow icon-angle-down"></b>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="/devops/cmdb/list">
+                            <i class="icon-double-angle-right"></i>主机信息列表
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/devops/cmdb/add">
+                            <i class="icon-double-angle-right"></i>添加Linux主机
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/devops/cmdb/recycle">
+                            <i class="icon-double-angle-right"></i>回收站
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+          <!--日志管理-->
+            <li class="active treeview">
+                <a href="#" class="dropdown-toggle" >
+                    <i class="icon-calendar"></i>
+                    <span class="menu-text">日志管理</span>
+                    <b class="arrow icon-angle-down"></b>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="/devops/log/view">
+                            <i class="icon-double-angle-right"></i>日志查看
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/devops/log/addnode">
+                            <i class="icon-double-angle-right"></i>添加节点
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/devops/log/kind">
+                            <i class="icon-double-angle-right"></i>日志种类
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </aside>  <!--左侧导航栏结束-->
+
+  <div class="content-wrapper">
+      <section class="content">
+      <!-- 主页 -->
+        {% block content %}
+        {% endblock content %}
+
+        <!--置顶向上按钮-->
+        <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+            <i class="icon-double-angle-up icon-only bigger-110"></i>
+        </a>
+      </section>
+  </div>
+
+  <footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      <strong>Version 1.0</strong>
+    </div>
+    <strong>Copyright &copy; 2018  <a href="http://www.cnblogs.com/yue-hong/">developed by 岳洪材</a>.</strong> All rights
+    reserved.
+  </footer>
+</div>  <!--wrapper结束-->
+
+
+</body>
+</html>
+
+

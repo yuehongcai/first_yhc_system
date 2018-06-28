@@ -1,0 +1,115 @@
+{% extends '../base.html' %}
+{% load staticfiles %}
+{% block css %}
+    <link href="{% static 'css/bootstrap/css/bootstrap-table.css' %}" rel="stylesheet">  <!--页面高度自动伸缩功能-->
+    <style type="text/css">
+        .user_list{
+            width: 100%;
+            border-radius: 6px;
+        }
+        .user_list_ls td{
+            white-space: nowrap;
+            padding-right:10px;
+            margin-left: 20px;
+            margin-right: 20px;
+            font-weight: normal;
+        }
+        .form-group{  /*设置登录框中的文本填入框*/
+            font-size: 16px;
+            font-family: '宋体';
+            color: #0FB9EF;
+            text-align: center;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .btn {
+            font-size: medium;
+            font-weight: bolder;
+            border-radius: 10px;
+        }
+    </style>
+{% endblock css %}
+
+{% block content %}
+
+<div class="user_list">
+    <div class="user_list_ls">
+        <div class="panel panel-default" >
+            <div class="panel-heading" style="text-align: center;font-weight: 600;color:hotpink;font-size: 20px;">
+                Ansible自动部署远端报告服务进程
+            </div>
+
+            <div class="panel-body form-group">
+    　　　　    <form  action="/devops/cmdb/add" method="post">
+                    <div class="form-group col-sm-3">
+                        {{ cmdbserveradd_form.add_ip.label }}
+                        {{ cmdbserveradd_form.add_ip }}
+                    </div>
+
+                    <div class="form-group col-sm-3">
+                        {{ cmdbserveradd_form.add_username.label }}
+                        {{ cmdbserveradd_form.add_username}}
+                    </div>
+
+                    <div class="form-group col-sm-3">
+                        {{ cmdbserveradd_form.add_password.label }}
+                        {{ cmdbserveradd_form.add_password }}
+                    </div>
+
+                    <div class="form-group col-sm-3">
+                        {{ cmdbserveradd_form.add_port.label }}
+                        {{ cmdbserveradd_form.add_port }}
+                    </div>
+
+                    <div class="form-group col-md-4 col-md-offset-4" >
+                        <button id="deploy" class="btn btn-primary">部署</button>
+                        <a href="/devops/cmdb/restart_agent"  id="restart" class="btn btn-warning">重启CMDB客户端进程</a>
+                    </div>
+
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="addModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" style="text-align: center">部署中，请稍等20秒</h4>
+                </div><!--modal-header end-->
+
+                <div class="modal-body">
+                    <form class="form-horizontal" id="addForm" accept-charset="UTF-8">
+                        <div class="control-group">
+                            {% if msg %}
+                                {{ msg }}
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <img src="/static/img/loading.gif">
+                             <div class="modal-footer">
+                                 <button class="btn btn-warning" data-dismiss="modal">确认</button>
+                            </div>
+                        </div>
+                    </form>
+                </div><!-- /.modal-body-->
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+{% endblock content %}
+
+{% block script %}
+    <script type="text/javascript">
+        $(function() {
+            $('#deploy').click(function () {
+                $('#addModal').modal('show');
+            });
+        });
+    </script>
+{% endblock script %}
